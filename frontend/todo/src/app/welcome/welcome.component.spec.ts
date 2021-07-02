@@ -1,4 +1,6 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppRoutingModule } from '../app-routing.module';
 
 import { WelcomeComponent } from './welcome.component';
 
@@ -8,9 +10,9 @@ describe('WelcomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ WelcomeComponent ]
-    })
-    .compileComponents();
+      declarations: [WelcomeComponent],
+      imports: [HttpClientModule, AppRoutingModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {

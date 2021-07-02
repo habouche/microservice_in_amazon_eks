@@ -1,4 +1,6 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppRoutingModule } from '../app-routing.module';
 
 import { LogoutComponent } from './logout.component';
 
@@ -8,9 +10,9 @@ describe('LogoutComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LogoutComponent ]
-    })
-    .compileComponents();
+      declarations: [LogoutComponent],
+      imports: [HttpClientModule, AppRoutingModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {

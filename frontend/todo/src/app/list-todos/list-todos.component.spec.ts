@@ -1,4 +1,6 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppRoutingModule } from '../app-routing.module';
 
 import { ListTodosComponent } from './list-todos.component';
 
@@ -8,9 +10,9 @@ describe('ListTodosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListTodosComponent ]
-    })
-    .compileComponents();
+      declarations: [ListTodosComponent],
+      imports: [HttpClientModule, AppRoutingModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {

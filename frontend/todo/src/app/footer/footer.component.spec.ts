@@ -1,5 +1,6 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { AppRoutingModule } from '../app-routing.module';
 import { FooterComponent } from './footer.component';
 
 describe('FooterComponent', () => {
@@ -8,9 +9,9 @@ describe('FooterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FooterComponent ]
-    })
-    .compileComponents();
+      declarations: [FooterComponent],
+      imports: [HttpClientModule, AppRoutingModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {

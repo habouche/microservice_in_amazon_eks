@@ -5,15 +5,16 @@ import { BasicAuthentificationService } from '../service/basic-authentification.
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.css']
+  styleUrls: ['./menu.component.css'],
 })
 export class MenuComponent implements OnInit {
-
   // isUserLoggedIn = false;
-  constructor(public basicAuthentificationService: BasicAuthentificationService) { }
+  constructor(
+    public basicAuthentificationService: BasicAuthentificationService
+  ) {}
 
   ngOnInit(): void {
+    console.log('Hello');
     // this.isUserLoggedIn = this.hardcodedAuthentificationService.isUserLoggedIn();
   }
-
 }

@@ -20,7 +20,9 @@ export class LoginComponent implements OnInit {
     private basicAuthentificationService: BasicAuthentificationService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log('Loggind Attempt');
+  }
 
   // handleLogin(): void {
   //   // console.log(this.username);
@@ -40,7 +42,7 @@ export class LoginComponent implements OnInit {
   // }
 
   handleJWTAuthLogin(): void {
-      this.basicAuthentificationService
+    this.basicAuthentificationService
       .executeJWTAuthenticationService(this.username, this.password)
       .subscribe(
         (data) => {

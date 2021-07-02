@@ -1,4 +1,6 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppRoutingModule } from '../app-routing.module';
 
 import { MenuComponent } from './menu.component';
 
@@ -8,9 +10,9 @@ describe('MenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MenuComponent ]
-    })
-    .compileComponents();
+      declarations: [MenuComponent],
+      imports: [HttpClientModule, AppRoutingModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {

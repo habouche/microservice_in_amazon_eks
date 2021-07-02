@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { LoginComponent } from './login/login.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { ErrorComponent } from './error/error.component';
 import { ListTodosComponent } from './list-todos/list-todos.component';
@@ -27,9 +27,19 @@ import { HttpInterceptorBasicAuthService } from './service/http/http-interceptor
     LogoutComponent,
     TodoComponent,
   ],
-  imports: [BrowserModule, FormsModule, AppRoutingModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AppRoutingModule,
+    HttpClientModule,
+  ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass : HttpInterceptorBasicAuthService, multi : true}
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpInterceptorBasicAuthService,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })
