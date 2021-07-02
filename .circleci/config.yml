@@ -96,6 +96,10 @@ jobs:
       - restore_cache:
           keys: [frontend-build]
       - run:
+          name: add chromium
+          command: apk add chromium \
+            ENV CHROME_BIN='/usr/bin/chromium-browser'
+      - run:
           name: FrontEnd Test
           command: |
             cd frontend/todo
