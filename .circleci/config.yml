@@ -67,6 +67,7 @@ jobs:
           name: Lint front-end
           command: |
             cd frontend/todo
+            npm i
             npm run lint
       - save_cache:
           paths: [frontend/node_modules]
@@ -103,7 +104,7 @@ jobs:
             # sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
             # sudo dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
             sudo apt install -y chromium
-            export CHROME_BIN="/usr/bin/chromium-browser"
+            export CHROME_BIN="/usr/bin/chromium"
       - run:
           name: FrontEnd Test
           command: |
@@ -458,6 +459,8 @@ workflows:
       - build-frontend
       - build-backend
       - test-frontend:
+          requires: [build-frontend]
+      - lint-frontend:
           requires: [build-frontend]
       # - test-backend:
       #     requires: [build-backend]
