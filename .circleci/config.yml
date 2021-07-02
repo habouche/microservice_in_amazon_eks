@@ -56,6 +56,22 @@ jobs:
           paths: [frontend/node_modules]
           key: frontend-build
 
+  lint-frontend:
+    docker:
+      - image: circleci/node:14.15.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [frontend-build]
+      - run:
+          name: Lint front-end
+          command: |
+            cd frontend/todo
+            npm run lint
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-build
+
   build-backend:
     docker:
       - image: circleci/openjdk
