@@ -91,26 +91,17 @@ jobs:
 
   test-frontend:
     docker:
-      - image: circleci/node:14.15.0
+      - image: circleci/node:14.15.0-browsers
     steps:
       - checkout
       - restore_cache:
           keys: [frontend-build]
       - run:
-          name: add chromium
-          command: |
-            sudo apt-get -y update
-            sudo apt-get install -y gconf-service libasound2 libatk1.0-0 libcairo2 libcups2 libfontconfig1 libgdk-pixbuf2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libxss1 fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils
-            # sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-            # sudo dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
-            sudo apt install -y chromium
-            export CHROME_BIN="/usr/bin/chromium"
-      - run:
           name: FrontEnd Test
           command: |
             cd frontend/todo
             npm i
-            npm run test-headless
+            npm run test
 
   # test-backend:
   #   docker:
