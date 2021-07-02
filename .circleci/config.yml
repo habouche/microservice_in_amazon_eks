@@ -97,8 +97,9 @@ jobs:
           keys: [frontend-build]
       - run:
           name: add chromium
-          command: sudo apt-get -y update \
-            sudo apt-get install chromium-browser \
+          command: |
+            sudo apt-get update
+            sudo apt-get install chromium-browser
             ENV CHROME_BIN="/usr/bin/chromium-browser"
       - run:
           name: FrontEnd Test
