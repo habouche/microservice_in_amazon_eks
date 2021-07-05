@@ -98,7 +98,7 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install mysql*
-            mysql -h 127.0.0.1 -u root -proot --execute="use restapi;"
+            sudo mysql -h 127.0.0.1 -u root -proot --execute="use restapi;"
       - run:
           name: Back-end build
           command: |
