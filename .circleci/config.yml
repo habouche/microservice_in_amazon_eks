@@ -72,22 +72,53 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-
   build-backend:
     docker:
-      - image: circleci/openjdk
+      - image: circleci/openjdk:8-jdk
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: restapi
+          MYSQL_USER: root
+          MYSQL_PASSWORD: root
     steps:
       - checkout
-      - restore_cache:
-          keys: [backend-build]
+      - run:
+          name: Waiting for MySQL to be ready
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z 127.0.0.1 3306 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for MySQL && exit 1
+      - run:
+          name: Install MySQL CLI; Import dummy data; run an example query
+          command: |
+            sudo apt-get update
+            sudo apt-get install mysql*
+            mysql -h 127.0.0.1 -u root -p root --execute="use restapi;"
       - run:
           name: Back-end build
           command: |
             cd backend/rest-web-services
             mvn package
-      - save_cache:
-          paths: [backend/target]
-          key: backend-build
+  # build-backend:
+  #   docker:
+  #     - image: circleci/openjdk
+  #   steps:
+  #     - checkout
+  #     - restore_cache:
+  #         keys: [backend-build]
+  #     - run:
+  #         name: Back-end build
+  #         command: |
+  #           cd backend/rest-web-services
+  #           mvn package
+  #     - save_cache:
+  #         paths: [backend/target]
+  #         key: backend-build
 
   test-frontend:
     docker:
