@@ -90,15 +90,9 @@ jobs:
             do
               nc -z 127.0.0.1 3306 && echo Success && exit 0
               echo -n .
-              sleep 1
+              sleep 3
             done
             echo Failed waiting for MySQL && exit 1
-      - run:
-          name: Install MySQL CLI
-          command: |
-            sudo rm -rf /var/lib/apt/lists/* && sudo apt update
-            sudo apt-get install mysql-client
-            sudo mysql -h 127.0.0.1 -u root -proot --execute="use restapi;"
       - run:
           name: Back-end build
           command: |
