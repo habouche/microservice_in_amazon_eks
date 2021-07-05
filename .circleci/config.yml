@@ -79,7 +79,6 @@ jobs:
         environment:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: restapi
-          MYSQL_USER: root
           MYSQL_PASSWORD: root
     steps:
       - checkout
