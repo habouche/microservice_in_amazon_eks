@@ -74,12 +74,13 @@ jobs:
           key: frontend-build
   build-backend:
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/openjdk
       - image: circleci/mysql:5.7
         environment:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: restapi
-          MYSQL_PASSWORD: root
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
     steps:
       - checkout
       - run:
