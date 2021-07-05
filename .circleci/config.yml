@@ -75,7 +75,7 @@ jobs:
   build-backend:
     docker:
       - image: circleci/openjdk:8-jdk
-      - image: circleci/mysql
+      - image: circleci/mysql:8.0.25
         environment:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: restapi
@@ -94,9 +94,9 @@ jobs:
             done
             echo Failed waiting for MySQL && exit 1
       - run:
-          name: Install MySQL CLI; Import dummy data; run an example query
+          name: Install MySQL CLI
           command: |
-            sudo rm -rf /var/lib/apt/lists/* && sudo apt-get update
+            sudo apt-get update
             sudo apt-get install mysql*
             sudo mysql -h 127.0.0.1 -u root -proot --execute="use restapi;"
       - run:
