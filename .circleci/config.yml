@@ -74,7 +74,7 @@ jobs:
           key: frontend-build
   build-backend:
     docker:
-      - image: circleci/openjdk
+      - image: circleci/openjdk:8
       - image: circleci/mysql:5.7
         environment:
           MYSQL_ROOT_PASSWORD: root
