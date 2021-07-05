@@ -74,8 +74,8 @@ jobs:
           key: frontend-build
   build-backend:
     docker:
-      - image: circleci/openjdk:8-jdk
-      - image: circleci/mysql:8.0.25
+      - image: circleci/openjdk
+      - image: circleci/mysql
         environment:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: restapi
@@ -97,7 +97,7 @@ jobs:
           name: Install MySQL CLI
           command: |
             sudo apt-get update
-            sudo apt-get install mysql*
+            sudo apt-get install mysql
             sudo mysql -h 127.0.0.1 -u root -proot --execute="use restapi;"
       - run:
           name: Back-end build
