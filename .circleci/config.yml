@@ -180,6 +180,8 @@ jobs:
           name: build frontend image
           command: |
             cd frontend/todo
+            npm i
+            npm run build
             docker build -t todo-frontend:1.0 .
       - run:
           name: Publish frontend docker image
@@ -199,7 +201,7 @@ jobs:
           name: build backend image
           command: |
             cd backend/rest-web-services
-            docker build -t todo-backend:1.0 .
+            sudo docker build -t todo-backend:1.0 .
       - run:
           name: Publish backend docker image
           command: |
