@@ -83,10 +83,10 @@ jobs:
           command: |
             cd backend/rest-web-services
             mvn package
-      - persist_to_workspace:
-          root: .
-          paths:
-            - target/
+      # - persist_to_workspace:
+      #     root: .
+      #     paths:
+      #       - target/
 
   # build-backend:
   #   docker:
@@ -169,6 +169,7 @@ jobs:
           name: build frontend image
           command: |
             cd frontend/todo
+            npm i
             npm run build
             docker build -t todo-frontend:1.0 .
             docker image ls
