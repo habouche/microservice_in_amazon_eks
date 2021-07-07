@@ -509,24 +509,24 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
-      # - test-frontend:
+      # - build-frontend
+      # - build-backend
+      # # - test-frontend:
+      # #     requires: [build-frontend]
+      # - lint-frontend:
       #     requires: [build-frontend]
-      - lint-frontend:
-          requires: [build-frontend]
       # - test-backend:
       #     requires: [build-backend]
       # - scan-backend:
       #     requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
-      - dockerize_frontend:
-          requires:
-            - "build-frontend"
-      - dockerize_backend:
-          requires:
-            - "build-backend"
+      # - scan-frontend:
+      #     requires: [build-frontend]
+      - dockerize_frontend
+        # requires:
+        #   - "build-frontend"
+      - dockerize_backend
+        # requires:
+        #   - "build-backend"
       # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
