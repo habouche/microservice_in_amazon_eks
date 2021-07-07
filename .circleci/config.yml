@@ -53,7 +53,7 @@ jobs:
             npm i
             npm run build
       - save_cache:
-          paths: [frontend/node_modules]
+          paths: [frontend/todo/node_modules]
           key: frontend-build
 
   lint-frontend:
@@ -70,7 +70,7 @@ jobs:
             npm i
             npm run lint
       - save_cache:
-          paths: [frontend/node_modules]
+          paths: [frontend/todo/node_modules]
           key: frontend-build
 
   build-backend:
@@ -84,7 +84,7 @@ jobs:
             cd backend/rest-web-services
             mvn package
       - persist_to_workspace:
-          root: ./
+          root: .
           paths:
             - target/
 
@@ -169,7 +169,6 @@ jobs:
           name: build frontend image
           command: |
             cd frontend/todo
-            npm i
             npm run build
             docker build -t todo-frontend:1.0 .
             docker image ls
@@ -177,6 +176,7 @@ jobs:
           name: Publish frontend docker image
           command: |
             dockerpath="$DOCKER_USER/$DOCKER_REGISTRY"
+            echo $dockerpath
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER $DOCKER_REGISTRY --password-stdin
             docker tag todo-frontend:1.0 $dockerpath:1.0
             docker push $dockerpath:1.0
@@ -200,6 +200,7 @@ jobs:
           name: Publish backend docker image
           command: |
             dockerpath="$DOCKER_USER/$DOCKER_REGISTRY_BACKEND"
+            echo $dockerpath
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER $DOCKER_REGISTRY --password-stdin
             docker tag todo-backend:1.0 $dockerpath:1.0
             docker push $dockerpath:1.0
