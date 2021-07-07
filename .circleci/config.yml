@@ -76,29 +76,18 @@ jobs:
   build-backend:
     docker:
       - image: circleci/openjdk
-      # - image: circleci/mysql
-      #   environment:
-      #     MYSQL_ROOT_PASSWORD: root
-      #     MYSQL_DATABASE: restapi
-      #     MYSQL_USER: user
-      #     MYSQL_PASSWORD: password
     steps:
       - checkout
-      # - run:
-      #     name: Waiting for MySQL to be ready
-      #     command: |
-      #       for i in `seq 1 10`;
-      #       do
-      #         nc -z 127.0.0.1 3306 && echo Success && exit 0
-      #         echo -n .
-      #         sleep 3
-      #       done
-      #       echo Failed waiting for MySQL && exit 1
       - run:
           name: Back-end build
           command: |
             cd backend/rest-web-services
             mvn package
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - target/
+
   # build-backend:
   #   docker:
   #     - image: circleci/openjdk
@@ -183,6 +172,7 @@ jobs:
             npm i
             npm run build
             docker build -t todo-frontend:1.0 .
+            docker image ls
       - run:
           name: Publish frontend docker image
           command: |
@@ -197,11 +187,15 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
+      - attach_workspace:
+          at: ./target
       - run:
           name: build backend image
           command: |
             cd backend/rest-web-services
+            chmod +x mvnw
             sudo docker build -t todo-backend:1.0 .
+            docker image ls
       - run:
           name: Publish backend docker image
           command: |
