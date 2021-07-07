@@ -178,7 +178,7 @@ jobs:
           command: |
             dockerpath="$DOCKER_USER/$DOCKER_REGISTRY"
             echo $dockerpath
-            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER $DOCKER_REGISTRY --password-stdin
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER $DOCKER_REGISTRY --password-stdin --add-host=namersever:8.8.8.8
             docker tag todo-frontend:1.0 $dockerpath:1.0
             docker push $dockerpath:1.0
 
@@ -188,14 +188,12 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - attach_workspace:
-          at: ./target
       - run:
           name: build backend image
           command: |
             cd backend/rest-web-services
             chmod +x mvnw
-            sudo docker build -t todo-backend:1.0 .
+            docker build -t todo-backend:1.0 .
             docker image ls
       - run:
           name: Publish backend docker image
