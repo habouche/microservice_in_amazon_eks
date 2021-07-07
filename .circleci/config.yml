@@ -200,7 +200,7 @@ jobs:
           command: |
             dockerpath="$DOCKER_USER/$DOCKER_REGISTRY_BACKEND"
             echo $dockerpath
-            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER $DOCKER_REGISTRY --password-stdin
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
             docker tag todo-backend:1.0 $dockerpath:1.0
             docker push $dockerpath:1.0
 
