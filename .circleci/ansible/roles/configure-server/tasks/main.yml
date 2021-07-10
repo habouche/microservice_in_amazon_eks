@@ -1,0 +1,34 @@
+---
+- name: "upgrade packages."
+  become: true
+  apt:
+    upgrade: "yes"
+
+- name: "download Minikube."
+  get_url:
+    url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    dest: /tmp
+    mode: "0777"
+
+- name: Install
+  become: true
+  shell: |
+    install /tmp/minikube-linux-amd64 /usr/local/bin/minikube
+
+- name: start minikube cluster
+  become: true
+  shell: |
+    minikube start
+
+- name: install kubectl
+  become: true
+  shell: |
+    minikube kubectl -- get po -A
+
+# - name: "installing pm2"
+#   become: yes
+#   npm:
+#     name: pm2
+#     global: yes
+#     production: yes
+#     state: present
