@@ -12,7 +12,7 @@
     state: latest
     update_cache: yes
 
-# - name: "add docker dpk key."
+# - name: "add docker dpk key"
 #   get_url:
 #     url: https://download.docker.com/linux/ubuntu/gpg
 #     dest: /tmp
