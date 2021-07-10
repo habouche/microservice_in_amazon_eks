@@ -49,7 +49,7 @@
     install /tmp/minikube-linux-amd64 /usr/local/bin/minikube
 
 - name: start minikube cluster
-  become: true
+  # become: true
   shell: |
     minikube start --driver=docker
 
