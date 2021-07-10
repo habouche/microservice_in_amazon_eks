@@ -48,8 +48,14 @@
   shell: |
     install /tmp/minikube-linux-amd64 /usr/local/bin/minikube
 
-- name: start minikube cluster
+- name: Add user
   become: true
+  shell: |
+    useradd fer
+    usermod -aG docker fer && newgrp docker
+
+- name: start minikube cluster
+  become_user: fer
   shell: |
     minikube start
 
