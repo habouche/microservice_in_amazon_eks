@@ -12,6 +12,11 @@
     state: latest
     update_cache: yes
 
+- name: install setfacl support
+  become: yes
+  apt:
+    name: acl
+
 # - name: "add docker dpk key"
 #   get_url:
 #     url: https://download.docker.com/linux/ubuntu/gpg
