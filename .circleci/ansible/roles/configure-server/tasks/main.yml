@@ -56,7 +56,8 @@
 - name: Add user
   become: true
   shell: |
-    usermod -aG docker $USER && newgrp docker
+    groupadd docker
+    usermod -aG docker $USER
 
 - name: start minikube cluster
   become: yes
