@@ -51,13 +51,15 @@
 - name: Add user
   become: true
   shell: |
-    useradd fer
-    usermod -aG docker fer && newgrp docker
+    useradd -m fer -p fer
+    groupadd docker
+    usermod -aG docker fer
 
 - name: start minikube cluster
+  become: yes
   become_user: fer
   shell: |
-    minikube start
+    minikube start --driver=docker
 
 - name: install kubectl
   become: true
