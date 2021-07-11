@@ -56,26 +56,27 @@
 - name: Add user
   become: true
   shell: |
-    useradd -m fer
-    groupadd docker
-    usermod -aG docker fer
-    newgrp docker
+    usermod -aG docker $USER && newgrp docker
 
 - name: start minikube cluster
   become: yes
-  become_user: fer
+  become_user: $USER
   shell: |
     minikube start --driver=docker
 
-# - name: install kubectl
-#   become: true
-#   shell: |
-#     minikube kubectl -- get po -A
+- name: "add kuectl dpk key"
+  become: true
+  shell: |
+    curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
 
-# - name: "installing pm2"
-#   become: yes
-#   npm:
-#     name: pm2
-#     global: yes
-#     production: yes
-#     state: present
+- name: "add kubernetes repo"
+  become: true
+  shell: |
+    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+- name: "install kubectl "
+  become: true
+  apt:
+    name: ["kubectl"]
+    state: latest
+    update_cache: yes
