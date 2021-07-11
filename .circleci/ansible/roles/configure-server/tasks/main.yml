@@ -66,10 +66,10 @@
   shell: |
     minikube start --driver=docker
 
-- name: install kubectl
-  become: true
-  shell: |
-    minikube kubectl -- get po -A
+# - name: install kubectl
+#   become: true
+#   shell: |
+#     minikube kubectl -- get po -A
 
 # - name: "installing pm2"
 #   become: yes
