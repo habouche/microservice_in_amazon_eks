@@ -56,9 +56,10 @@
 - name: Add user
   become: true
   shell: |
-    useradd -m fer -p fer
+    useradd -m fer
     groupadd docker
     usermod -aG docker fer
+    newgrp docker
 
 - name: start minikube cluster
   become: yes
