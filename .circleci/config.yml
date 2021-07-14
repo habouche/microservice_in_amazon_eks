@@ -292,54 +292,38 @@ jobs:
   #     - revert-migrations:
   #         workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
-  # deploy-backend:
-  #   docker:
-  #     - image: python:3.7-alpine3.11
-  #   steps:
-  #     - checkout
-  #     - add_ssh_keys:
-  #         fingerprints: ["58:cb:b5:ea:33:23:90:de:96:16:69:8a:d8:00:ef:d9"]
-  #     - attach_workspace:
-  #         at: .circleci/ansible
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           apk add --update ansible
-  #           apk add tar gzip
-  #           apk add curl
-  #           apk add gzip
-  #           apk add nodejs
-  #           apk add npm
-  #           pip install awscli
-  #     - run:
-  #         name: Prepare Environment Variables
-  #         command: |
-  #           cat \<< EOF > backend/.env
-  #           ENVIRONMENT=production
-  #           VERSION=1
-  #           TYPEORM_CONNECTION=postgres
-  #           TYPEORM_MIGRATIONS_DIR=./src/migrations
-  #           TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
-  #           TYPEORM_MIGRATIONS=./src/migrations/*.ts
-  #           TYPEORM_HOST=${TYPEORM_HOST}
-  #           TYPEORM_PORT=${TYPEORM_PORT}
-  #           TYPEORM_USERNAME=${TYPEORM_USERNAME}
-  #           TYPEORM_PASSWORD=${TYPEORM_PASSWORD}
-  #           TYPEORM_DATABASE=${TYPEORM_DATABASE}
-  #           EOF
-  #     - run:
-  #         name: Prepare Artifacts
-  #         command: |
-  #           tar czvf backend.tar.gz backend
-  #           cp -r backend.tar.gz /root/project/.circleci/ansible/roles/deploy/files
-  #     - run:
-  #         name: Deploy backend
-  #         command: |
-  #           ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
-  #     - destroy-environment:
-  #         workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-  #     - revert-migrations:
-  #         workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+  deploy-to-cluster:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["58:cb:b5:ea:33:23:90:de:96:16:69:8a:d8:00:ef:d9"]
+      - attach_workspace:
+          at: .circleci/ansible
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible
+            apk add tar gzip
+            apk add curl
+            apk add gzip
+            apk add nodejs
+            apk add npm
+            pip install awscli
+      - run:
+          name: Prepare Deployment Files
+          command: |
+            tar czvf backend.tar.gz backend
+            cp -r backend.tar.gz /root/project/.circleci/ansible/roles/deploy/files
+      - run:
+          name: Deploy To cluster
+          command: |
+            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
   smoke-test:
     docker:
@@ -479,8 +463,8 @@ workflows:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
       #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [deploy-frontend]
+      - deploy-to-cluster:
+          requires: [configure-infrastructure]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:

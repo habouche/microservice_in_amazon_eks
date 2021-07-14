@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo
+spec:
+  selector:
+    app: todo
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo
+  template:
+    metadata:
+      labels:
+        app: todo
+    spec:
+      containers:
+        - name: app
+          image: ferhab1994/udacity-capstone-backend:1.0
+          ports:
+            - containerPort: 8080
+          # env:
+          #   - name: BACKEND_URL
+          #     value: mongodb://mongo:27017/dev
+          imagePullPolicy: Always

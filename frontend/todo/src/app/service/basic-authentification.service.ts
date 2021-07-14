@@ -32,10 +32,7 @@ export class BasicAuthentificationService {
       );
   }
 
-  executeJWTAuthenticationService(
-    username,
-    password
-  ): Observable<any> {
+  executeJWTAuthenticationService(username, password): Observable<any> {
     // const basicAuthHeaderString =
     //   'Basic ' + window.btoa(username + ':' + password);
     // const headers = new HttpHeaders({ Authorization: basicAuthHeaderString });
