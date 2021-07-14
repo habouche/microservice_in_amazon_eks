@@ -57,7 +57,7 @@
   become: true
   shell: |
     groupadd docker
-    usermod -aG docker ubuntu && newgrp docker
+    usermod -aG docker ubuntu
 
 - name: start minikube cluster
   become: yes

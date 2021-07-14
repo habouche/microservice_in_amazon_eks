@@ -311,11 +311,11 @@ jobs:
             apk add nodejs
             apk add npm
             pip install awscli
-      - run:
-          name: Prepare Deployment Files
-          command: |
-            tar czvf backend.tar.gz backend
-            cp -r backend.tar.gz /root/project/.circleci/ansible/roles/deploy/files
+      # - run:
+      #     name: Prepare Deployment Files
+      #     command: |
+      #       tar czvf backend.tar.gz backend
+      #       cp -r backend.tar.gz /root/project/.circleci/ansible/roles/deploy/files
       - run:
           name: Deploy To cluster
           command: |
