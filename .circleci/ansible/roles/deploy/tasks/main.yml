@@ -21,7 +21,7 @@
 #     cd /home/ubuntu
 #     kubectl apply -f kube
 
-# - name: get pods
-#   become: true
-#   shell: |
-#     kubectl get pods
+- name: get pods
+  become: true
+  shell: |
+    kubectl get pods
