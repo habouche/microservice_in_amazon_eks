@@ -10,12 +10,12 @@
     src: /root/project/kube
     dest: /home/ubuntu
 # - name: Deploy to kubernetes cluster
-#   become: true
+#   become: yes
 #   shell: |
 #     cd /home/ubuntu
 #     kubectl apply -f kube
 
 # - name: get pods
-#   become: true
+#   become: yes
 #   shell: |
 #     kubectl get pods
