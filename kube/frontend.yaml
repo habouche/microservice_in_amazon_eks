@@ -8,7 +8,7 @@ spec:
   ports:
     - port: 4200
       targetPort: 80
-  type: LoadBalancer
+  type: NodePort
 
 ---
 apiVersion: apps/v1
@@ -26,11 +26,8 @@ spec:
         app: frontend
     spec:
       containers:
-        - name: app
+        - name: frontend
           image: ferhab1994/udacity-capstone:1.0
           ports:
             - containerPort: 80
-          # env:
-          #   - name: BACKEND_URL
-          #     value: mongodb://mongo:27017/dev
           imagePullPolicy: Always
