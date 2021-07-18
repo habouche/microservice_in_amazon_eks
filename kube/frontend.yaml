@@ -8,7 +8,7 @@ spec:
   ports:
     - port: 4200
       targetPort: 80
-  type: LoadBalancer
+      nodePort: 4200
 
 ---
 apiVersion: apps/v1
