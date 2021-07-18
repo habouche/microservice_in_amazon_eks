@@ -9,19 +9,13 @@
   copy:
     src: /root/project/kube
     dest: /home/ubuntu
-# - name: prepare binaries
-#   become: true
-#   shell: |
-#     cd /home/ubuntu
-#     tar xvzf backend.tar.gz -C .
-
 # - name: Deploy to kubernetes cluster
 #   become: true
 #   shell: |
 #     cd /home/ubuntu
 #     kubectl apply -f kube
 
-- name: get pods
-  become: true
-  shell: |
-    kubectl get pods
+# - name: get pods
+#   become: true
+#   shell: |
+#     kubectl get pods
