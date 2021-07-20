@@ -495,10 +495,10 @@ workflows:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-      - dockerize_frontend
+      # - dockerize_frontend
       # requires:
       #   - "build-frontend"
-      - dockerize_backend
+      # - dockerize_backend
       # requires:
       #   - "build-backend"
       # - deploy-infrastructure:
