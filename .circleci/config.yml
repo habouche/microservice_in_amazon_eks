@@ -501,8 +501,8 @@ workflows:
       #     filters:
       #       branches:
       #         only: [main]
-      - create_cluster:
-          requires: [dockerize_frontend, dockerize_backend]
+      - create_cluster
+      # requires: [dockerize_frontend, dockerize_backend]
       # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
       - deployment:
