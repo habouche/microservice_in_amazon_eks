@@ -358,11 +358,6 @@ jobs:
 
   deployment:
     executor: aws-eks/python3
-    parameters:
-      cluster-name:
-        description: |
-          udacity-capstone
-        type: string
     steps:
       - checkout
       - kubernetes/install
