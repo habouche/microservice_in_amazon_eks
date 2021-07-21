@@ -42,7 +42,7 @@
     state: latest
     update_cache: yes
 
-- name: "download Minikube."
+- name: "download Minikube"
   get_url:
     url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
     dest: /tmp
