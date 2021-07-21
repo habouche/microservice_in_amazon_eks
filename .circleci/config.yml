@@ -97,19 +97,6 @@ jobs:
           paths: [backend/rest-web-services/target]
           key: backend-build
 
-  # scan-backend:
-  #   docker:
-  #     - image: circleci/node:13.8.0
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         keys: [backend-build]
-  #     - run:
-  #         name: backend scan
-  #         command: |
-  #           cd backend
-  #           npm audit fix --audit-level=critical --force
-
   dockerize_frontend:
     docker:
       - image: circleci/node:14.15.0
@@ -213,90 +200,6 @@ jobs:
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
-  # run-migrations:
-  #   docker:
-  #     - image: circleci/node:13.8.0
-  #   steps:
-  #     - checkout
-  #     - run:
-  #         name: Prepare Environment Variables
-  #         command: |
-  #           cat \<< EOF > backend/.env
-  #           ENVIRONMENT=production
-  #           VERSION=1
-  #           TYPEORM_CONNECTION=postgres
-  #           TYPEORM_MIGRATIONS_DIR=./src/migrations
-  #           TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
-  #           TYPEORM_MIGRATIONS=./src/migrations/*.ts
-  #           TYPEORM_HOST=${TYPEORM_HOST}
-  #           TYPEORM_PORT=${TYPEORM_PORT}
-  #           TYPEORM_USERNAME=${TYPEORM_USERNAME}
-  #           TYPEORM_PASSWORD=${TYPEORM_PASSWORD}
-  #           TYPEORM_DATABASE=${TYPEORM_DATABASE}
-  #           EOF
-  #     - run:
-  #         name: install awscli
-  #         command: |
-  #           sudo apt-get -y update
-  #           sudo apt-get -y install python \
-  #             python-pip \
-  #             python-setuptools \
-  #             curl
-  #           pip install
-  #           pip --no-cache-dir install --upgrade awscli
-
-  #     - run:
-  #         name: Run migrations and send migration results to memstash
-  #         command: |
-  #           cd backend
-  #           npm i
-  #           npm run build
-  #           npm run migrations > migration-log.txt
-  #           if cat migration-log.txt | grep "has been executed successfully"; then
-  #             curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" \
-  #               --request PUT --data "1" \
-  #               https://api.memstash.io/values/migration-"${CIRCLE_WORKFLOW_ID:0:7}"
-  #           fi
-  #     - destroy-environment:
-  #         workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-  #     - revert-migrations:
-  #         workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-
-  # deploy-frontend:
-  #   docker:
-  #     - image: amazon/aws-cli
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         keys: [frontend-build]
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           yum install -y curl tar sudo
-  #           curl -sL https://rpm.nodesource.com/setup_13.x | sudo bash -
-  #           yum install -y nodejs
-  #     - run:
-  #         name: Get backend url
-  #         command: |
-  #           export BACKEND_IP=$(curl -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" \
-  #             --request GET https://api.memstash.io/values/backendurl)
-  #           export API_URL="http://${BACKEND_IP}:3030"
-  #           cat \<< EOF > frontend/.env
-  #           API_URL=${API_URL}
-  #           EOF
-  #           cat frontend/.env
-  #     - run:
-  #         name: Deploy frontend objects
-  #         command: |
-  #           cd frontend
-  #           npm i
-  #           npm run build
-  #           aws s3 cp dist s3://capstone-"${CIRCLE_WORKFLOW_ID:0:7}" --recursive
-  #     - destroy-environment:
-  #         workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-  #     - revert-migrations:
-  #         workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-
   deploy-to-cluster:
     docker:
       - image: python:3.7-alpine3.11
@@ -316,11 +219,6 @@ jobs:
             apk add nodejs
             apk add npm
             pip install awscli
-      # - run:
-      #     name: Prepare Deployment Files
-      #     command: |
-      #       tar czvf backend.tar.gz backend
-      #       cp -r backend.tar.gz /root/project/.circleci/ansible/roles/deploy/files
       - run:
           name: Deploy To cluster
           command: |
@@ -328,46 +226,46 @@ jobs:
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
-  create_cluster:
-    executor: aws-cli/default
-    steps:
-      - checkout
-      - aws-cli/setup
-      - run: sudo apt-get update
-      - run: sudo apt-get install -y python3-pip python-dev
-      - run: sudo pip install --upgrade awscli
-      - run: aws --version
+  # create_cluster:
+  #   executor: aws-cli/default
+  #   steps:
+  #     - checkout
+  #     - aws-cli/setup
+  #     - run: sudo apt-get update
+  #     - run: sudo apt-get install -y python3-pip python-dev
+  #     - run: sudo pip install --upgrade awscli
+  #     - run: aws --version
 
-      - run:
-          name: install kubectl
-          command: |
-            curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.20.4/2021-04-12/bin/linux/amd64/kubectl
-            chmod +x ./kubectl
-            mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
-            kubectl version --short --client
-      - run:
-          name: install eksctl
-          command: |
-            curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-            sudo mv /tmp/eksctl /usr/local/bin
-            kubectl version --short --client
-      - run:
-          name: Create EKS-Cluster
-          command: |
-            eksctl create cluster --name udacity-capstone --managed --node-type "t2.small" --nodes 2
+  #     - run:
+  #         name: install kubectl
+  #         command: |
+  #           curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.20.4/2021-04-12/bin/linux/amd64/kubectl
+  #           chmod +x ./kubectl
+  #           mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+  #           kubectl version --short --client
+  #     - run:
+  #         name: install eksctl
+  #         command: |
+  #           curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+  #           sudo mv /tmp/eksctl /usr/local/bin
+  #           kubectl version --short --client
+  #     - run:
+  #         name: Create EKS-Cluster
+  #         command: |
+  #           eksctl create cluster --name udacity-capstone --managed --node-type "t2.small" --nodes 2
 
-  deployment:
-    executor: aws-eks/python3
-    steps:
-      - checkout
-      - kubernetes/install
-      - aws-eks/update-kubeconfig-with-authenticator:
-          cluster-name: udacity-capstone
-          install-kubectl: true
-      - kubernetes/create-or-update-resource:
-          get-rollout-status: true
-          resource-file-path: kube/frontend.yml
-          resource-name: kube/frontend
+  # deployment:
+  #   executor: aws-eks/python3
+  #   steps:
+  #     - checkout
+  #     - kubernetes/install
+  #     - aws-eks/update-kubeconfig-with-authenticator:
+  #         cluster-name: udacity-capstone
+  #         install-kubectl: true
+  #     - kubernetes/create-or-update-resource:
+  #         get-rollout-status: true
+  #         resource-file-path: kube/frontend.yml
+  #         resource-name: kube/frontend
 
   smoke-test:
     docker:
@@ -412,40 +310,6 @@ jobs:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-
-  cloudfront-update:
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            yum -y install tar gzip
-      - run:
-          name: Update cloudfront distribution
-          command: |
-            export OldWorkflowID=$(aws cloudformation \
-                list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-                --no-paginate --output text)
-
-            echo $OldWorkflowID    
-              
-            curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" \
-              --request PUT \
-              --data "${OldWorkflowID}" https://api.memstash.io/values/OldWorkflowID
-
-            aws cloudformation deploy \
-            --template-file .circleci/files/cloudfront.yml \
-            --stack-name cloudfront \
-            --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
-            --tags project=capstone
-
-      - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-
   cleanup:
     docker:
       - image: amazon/aws-cli
@@ -496,23 +360,23 @@ workflows:
       # - dockerize_backend
       # requires:
       #   - "build-backend"
-      # - deploy-infrastructure:
+      - deploy-infrastructure
       #     requires: [dockerize_frontend, dockerize_backend]
       #     filters:
       #       branches:
       #         only: [main]
-      - create_cluster
+      #- create_cluster
       # requires: [dockerize_frontend, dockerize_backend]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      - deployment:
-          requires: [create_cluster]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+      # - deployment:
+      # requires: [create_cluster]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
       #     requires: [run-migrations]
-      # - deploy-to-cluster:
-      #     requires: [configure-infrastructure]
+      - deploy-to-cluster:
+          requires: [configure-infrastructure]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
